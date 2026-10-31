@@ -10,16 +10,18 @@
 <style>
 /* Ditulis untuk Safari iOS 9: tiada CSS variables, tiada grid.
    Animasi hanya guna transform & opacity supaya ringan untuk cip A5. */
-@font-face { font-family: "Poppins"; font-weight: 200; src: url(/*__FONT_200__*/) format("woff"); }
-@font-face { font-family: "Poppins"; font-weight: 300; src: url(/*__FONT_300__*/) format("woff"); }
-@font-face { font-family: "Poppins"; font-weight: 400; src: url(/*__FONT_400__*/) format("woff"); }
-@font-face { font-family: "Poppins"; font-weight: 500; src: url(/*__FONT_500__*/) format("woff"); }
-@font-face { font-family: "Poppins"; font-weight: 600; src: url(/*__FONT_600__*/) format("woff"); }
+@font-face { font-family: "Jost"; font-weight: 200; src: url(/*__FONT_jost-200__*/) format("woff"); }
+@font-face { font-family: "Jost"; font-weight: 300; src: url(/*__FONT_jost-300__*/) format("woff"); }
+@font-face { font-family: "Jost"; font-weight: 400; src: url(/*__FONT_jost-400__*/) format("woff"); }
+@font-face { font-family: "Jost"; font-weight: 500; src: url(/*__FONT_jost-500__*/) format("woff"); }
+@font-face { font-family: "Jost"; font-weight: 600; src: url(/*__FONT_jost-600__*/) format("woff"); }
+@font-face { font-family: "Cinzel"; font-weight: 500; src: url(/*__FONT_cinzel-500__*/) format("woff"); }
+@font-face { font-family: "Cinzel"; font-weight: 600; src: url(/*__FONT_cinzel-600__*/) format("woff"); }
 
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-box-sizing: border-box; }
 html, body { height: 100%; background: #060807; color: #f2efe6; overflow: hidden; }
 body {
-  font-family: "Poppins", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Jost", "Helvetica Neue", Helvetica, Arial, sans-serif;
   -webkit-text-size-adjust: 100%;
   -webkit-user-select: none;
   -webkit-font-smoothing: antialiased;
@@ -76,8 +78,12 @@ body.ringan .kotak.next { border-color: #a8873f; }
 }
 .row { display: -webkit-flex; display: flex; }
 
-/* Digit dalam slot lebar tetap (Poppins tiada nombor sama lebar) */
-.d { display: inline-block; width: 0.64em; text-align: center; }
+/* Tajuk & label guna Cinzel (serif klasik), selebihnya Jost */
+#nama, .kotak .n, #namaNext, #lapisTajuk, #ampm { font-family: "Cinzel", Georgia, serif; }
+
+/* Digit dalam slot lebar tetap (nombor Jost tak sama lebar) */
+.d { display: inline-block; width: 0.6em; text-align: center; }
+#kira .d { width: 0.64em; }
 .d.kosong { display: none; }
 .d.gulung { animation: gulung 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); }
 @keyframes gulung {

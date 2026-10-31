@@ -5,7 +5,7 @@ Paparan jam dan waktu solat untuk iPad lama (iOS 9). Zon JAKIM **NGS03** (Seremb
 - Waktu solat rasmi JAKIM e-Solat disimpan terus dalam `index.html`, jadi paparan tak perlu internet untuk tarik waktu.
 - JavaScript ES5 sahaja (serasi Safari iOS 9).
 - Mod iqamah (5 minit), skrin "matikan telefon" (15 minit) dan skrin Jumaat (45 minit).
-- Font Poppins dibenamkan terus dalam `index.html` semasa bina (sumber dalam `fonts/`, lesen SIL OFL, lihat `fonts/OFL.txt`).
+- Font Cinzel (tajuk) dan Jost (nombor & teks) dibenamkan terus dalam `index.html` semasa bina (sumber dalam `fonts/`, lesen SIL OFL).
 - **Mod ringan** automatik untuk iPhone/iPad iOS 12 ke bawah: tiada animasi, latar rata, font lebih tebal untuk skrin bukan Retina. Paksa dengan `?mod=ringan` atau `?mod=penuh` pada link.
 - Animasi hanya guna transform & opacity. Set `ANIMASI_LATAR = false` untuk matikan cahaya bergerak di latar.
 
