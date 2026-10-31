@@ -4,7 +4,7 @@ Paparan jam dan waktu solat untuk iPad lama (iOS 9). Zon JAKIM **NGS03** (Seremb
 
 - Waktu solat rasmi JAKIM e-Solat disimpan terus dalam `index.html`, jadi paparan tak perlu internet untuk tarik waktu.
 - JavaScript ES5 sahaja (serasi Safari iOS 9).
-- Kad kiri: hari, tarikh Masihi dan kalendar Hijri. Kad kanan "Tarikh Penting": kira hari ke Awal Ramadan, Aidilfitri, Aidiladha, Awal Muharram, Maulidur Rasul dan lain-lain, ikut tarikh Hijri dalam data JAKIM.
+- Kad kiri: hari, tarikh Masihi dan kalendar Hijri. Kad kanan "Tarikh Penting": kira hari ke Awal Ramadan, Aidilfitri, Aidiladha, Awal Muharram, Maulidur Rasul dan lain-lain, ikut tarikh Hijri dalam data JAKIM. 6 acara terdekat bergilir setiap `PUTARAN_SAAT` (7) saat.
 - Kotak waktu semasa ditebalkan dengan lencana "SEKARANG".
 - Saiz ikut skrin 4:3 (iPad) atau 16:9 (komputer/TV) tanpa terpotong.
 - Mod iqamah (5 minit), skrin "matikan telefon" (15 minit) dan skrin Jumaat (45 minit).

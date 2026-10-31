@@ -189,6 +189,14 @@ body.ringan .kotak.next { border-color: #a8873f; }
 .aiTarikh { font-size: 1.1rem; color: #8d877a; }
 .aiHari { font-size: 1.5rem; font-weight: 500; color: #d8b45a; white-space: nowrap; margin-left: 1rem; }
 .acaraNota { font-size: 0.95rem; color: #5f5a50; margin-top: 0.6rem; }
+/* Giliran acara: yang lama naik keluar, yang baru naik masuk */
+#acaraUtama.keluar, #acaraSenarai.keluar { animation: keluarAcara 0.35s ease-in forwards; }
+#acaraUtama.naik, .ai.naik { animation: naikAcara 0.75s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+@keyframes keluarAcara { from { opacity: 1; transform: translate3d(0,0,0); } to { opacity: 0; transform: translate3d(0,-1.4rem,0); } }
+@keyframes naikAcara { from { opacity: 0; transform: translate3d(0,1.8rem,0); } to { opacity: 1; transform: translate3d(0,0,0); } }
+#acaraTitik { margin-top: 1rem; line-height: 0; }
+#acaraTitik i { display: inline-block; width: 0.6rem; height: 0.6rem; margin-right: 0.55rem; border-radius: 50%; background: rgba(216,180,90,0.25); transition: background-color 0.4s, transform 0.4s; }
+#acaraTitik i.aktif { background: #d8b45a; transform: scale(1.35); }
 @keyframes masukKanan { from { opacity: 0; transform: translate3d(3rem,0,0); } to { opacity: 1; transform: translate3d(0,0,0); } }
 
 /* Kotak waktu */
@@ -348,6 +356,7 @@ body.ringan .kotak.next { border-color: #a8873f; }
   .aiHari { font-size: 2.5rem; }
   .ai { padding: 1.1rem 0; }
   .acaraNota { font-size: 1.6rem; }
+  #acaraTitik i { width: 1rem; height: 1rem; margin-right: 0.9rem; }
   .lencana { font-size: 1.7rem; top: -1.8rem; padding: 0.35rem 1.3rem; }
   .lencana i { width: 0.9rem; height: 0.9rem; }
   .kotak.kini .t { font-size: 6.6rem; }
@@ -415,10 +424,13 @@ window.addEventListener("orientationchange", skala);
     </div>
     <div id="acara" class="kad">
       <div class="acaraLabel">TARIKH PENTING</div>
-      <div id="acaraNama">&nbsp;</div>
-      <div id="acaraTarikh">&nbsp;</div>
-      <div id="acaraKira"><span id="acaraHari">&nbsp;</span><span id="acaraUnit"></span></div>
+      <div id="acaraUtama">
+        <div id="acaraNama">&nbsp;</div>
+        <div id="acaraTarikh">&nbsp;</div>
+        <div id="acaraKira"><span id="acaraHari">&nbsp;</span><span id="acaraUnit"></span></div>
+      </div>
       <div id="acaraSenarai"></div>
+      <div id="acaraTitik"></div>
       <div class="acaraNota">*Ikut takwim JAKIM, tertakluk pengumuman rasmi</div>
     </div>
   </div>
@@ -462,6 +474,7 @@ var FORMAT_24JAM = false;
 var IQAMAH_MINIT = [5, 0, 5, 5, 5, 5];
 var SOLAT_MINIT = 15;    // tempoh skrin "matikan telefon" selepas iqamah
 var JUMAAT_MINIT = 45;   // tempoh skrin khutbah & solat Jumaat dari masuk waktu
+var PUTARAN_SAAT = 7;     // kad Tarikh Penting bergilir setiap N saat
 var ANIMASI_LATAR = true; // false = matikan cahaya bergerak di latar (kurang beban GPU)
 // "auto" = mod ringan untuk iPhone/iPad iOS 12 ke bawah, penuh untuk lain-lain.
 // Boleh dipaksa melalui link: ?mod=ringan atau ?mod=penuh
@@ -635,29 +648,65 @@ function labelHari(n) {
   return n === 0 ? "Hari ini" : n === 1 ? "Esok" : n + " hari";
 }
 
+var acaraSemasa = [], acaraMula = 0;
+
+// Dipanggil sekali sehari: ambil 6 acara terdekat dan mula dari yang paling hampir
 function pasangAcara(now) {
-  var a = cariAcara(now, 4);
-  if (!a.length) {
+  acaraSemasa = cariAcara(now, 6);
+  acaraMula = 0;
+  if (!acaraSemasa.length) {
     $("acara").style.visibility = "hidden";
     return;
   }
   $("acara").style.visibility = "visible";
-  $("acaraNama").innerHTML = a[0].nama;
-  $("acaraTarikh").innerHTML = formatHijri(a[0].hijri) + " &middot; " + formatMasihiPendek(a[0].masihi);
-  if (a[0].hari === 0) {
+  lukisAcara(false);
+}
+
+// Acara ke-acaraMula jadi acara utama; 3 seterusnya disenaraikan di bawah (bergilir)
+function lukisAcara(animasi) {
+  var a = acaraSemasa, n = a.length, u = a[acaraMula];
+  $("acaraNama").innerHTML = u.nama;
+  $("acaraTarikh").innerHTML = formatHijri(u.hijri) + " &middot; " + formatMasihiPendek(u.masihi);
+  if (u.hari === 0) {
     $("acaraHari").innerHTML = "Hari ini";
     $("acaraUnit").innerHTML = "";
   } else {
-    $("acaraHari").innerHTML = a[0].hari;
-    $("acaraUnit").innerHTML = a[0].hari === 1 ? "hari lagi (esok)" : "hari lagi";
+    $("acaraHari").innerHTML = u.hari;
+    $("acaraUnit").innerHTML = u.hari === 1 ? "hari lagi (esok)" : "hari lagi";
   }
   var html = "";
-  for (var i = 1; i < a.length; i++) {
-    html += "<div class=\"ai\"><div><div class=\"aiNama\">" + a[i].nama + "</div>" +
-      "<div class=\"aiTarikh\">" + formatMasihiPendek(a[i].masihi) + "</div></div>" +
-      "<div class=\"aiHari\">" + labelHari(a[i].hari) + "</div></div>";
+  for (var k = 1; k <= 3 && k < n; k++) {
+    var e = a[(acaraMula + k) % n];
+    html += "<div class=\"ai" + (animasi ? " naik" : "") + "\" style=\"animation-delay:" + (0.1 + 0.08 * k) + "s\">" +
+      "<div><div class=\"aiNama\">" + e.nama + "</div>" +
+      "<div class=\"aiTarikh\">" + formatMasihiPendek(e.masihi) + "</div></div>" +
+      "<div class=\"aiHari\">" + labelHari(e.hari) + "</div></div>";
   }
   $("acaraSenarai").innerHTML = html;
+  var titik = "";
+  for (var i = 0; i < n; i++) titik += "<i" + (i === acaraMula ? " class=\"aktif\"" : "") + "></i>";
+  $("acaraTitik").innerHTML = n > 1 ? titik : "";
+  if (animasi) ulangAnimasi($("acaraUtama"), "naik");
+}
+
+function putarAcara() {
+  var n = acaraSemasa.length;
+  if (n < 2) return;
+  if (RINGAN) {  // tiada animasi: tukar terus
+    acaraMula = (acaraMula + 1) % n;
+    lukisAcara(false);
+    return;
+  }
+  var utama = $("acaraUtama"), senarai = $("acaraSenarai");
+  utama.classList.remove("naik");
+  utama.classList.add("keluar");
+  senarai.classList.add("keluar");
+  setTimeout(function () {
+    acaraMula = (acaraMula + 1) % acaraSemasa.length;
+    utama.classList.remove("keluar");
+    senarai.classList.remove("keluar");
+    lukisAcara(true);
+  }, 350);
 }
 
 function pasangHari(now, hari) {
@@ -785,6 +834,7 @@ function mula() {
   $("nama").innerHTML = NAMA;
   $("julat").innerHTML = "Data sah hingga /*__END_LABEL__*/";
   tick();
+  setInterval(putarAcara, PUTARAN_SAAT * 1000);
 }
 
 mula();
