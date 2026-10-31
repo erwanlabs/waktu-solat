@@ -14,7 +14,15 @@ Paparan jam dan waktu solat untuk iPad lama (iOS 9). Zon JAKIM **NGS03** (Seremb
 
 ## Tetapan
 
-Edit `build/template.html`, bahagian `TETAPAN` (nama, format jam, minit iqamah, animasi latar), kemudian bina semula.
+Ketik ikon gear di penjuru kanan atas untuk buka panel tetapan:
+
+- **Bunyi azan**: hidup/mati, kekuatan bunyi, fail MP3 azan biasa dan azan Subuh (disimpan dalam IndexedDB peranti), loceng semasa iqamah, butang uji.
+- **Waktu azan & iqamah**: azan hidup/mati, pelarasan minit dari waktu JAKIM, dan minit iqamah untuk setiap waktu.
+- **Paparan**: nama, tempoh skrin solat dan Jumaat, tempoh giliran Tarikh Penting, format 24 jam, mod paparan, cahaya latar.
+
+Tetapan disimpan dalam `localStorage` peranti itu sahaja. Pelayar menyekat bunyi sehingga skrin disentuh, jadi selepas page dibuka atau dimuat semula, ketik skrin sekali untuk aktifkan bunyi azan.
+
+Nilai asal boleh diubah dalam `build/template.html`, bahagian `TETAPAN`, kemudian bina semula.
 
 ## Kemas kini data tahunan
 

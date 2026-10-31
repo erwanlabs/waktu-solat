@@ -311,6 +311,73 @@ body.ringan .kotak.next { border-color: #a8873f; }
 #lapis.akhir #lapisKira { color: #f6e3a8; animation: denyut 1s ease-in-out infinite; }
 @keyframes denyut { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
 
+/* ---------- Ikon & panel tetapan ---------- */
+#butangTetapan {
+  position: absolute; top: 2.2rem; right: 3rem; z-index: 40;
+  width: 3.6rem; height: 3.6rem; padding: 0.7rem;
+  border: 1px solid rgba(216,180,90,0.25); border-radius: 50%;
+  background: rgba(0,0,0,0.3); opacity: 0.55; cursor: pointer;
+  transition: opacity 0.3s;
+}
+#butangTetapan:hover { opacity: 1; }
+#butangTetapan svg { display: block; width: 100%; height: 100%; }
+#tetapan {
+  display: none;
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 50;
+  background: rgba(0,0,0,0.78);
+  overflow-y: auto; -webkit-overflow-scrolling: touch;
+  padding: 3rem 0;
+}
+#tetapan.buka { display: block; }
+.tpKad {
+  width: 74rem; max-width: 94%; margin: 0 auto;
+  padding: 2.4rem 2.8rem 2.8rem;
+  background: #11110f; border: 1px solid rgba(216,180,90,0.3); border-radius: 1.4rem;
+  font-size: 1.5rem; color: #f2efe6;
+}
+.tpKad h2 { font-family: "Cinzel", Georgia, serif; font-size: 2.6rem; font-weight: 600; color: #d8b45a; letter-spacing: 0.06em; }
+.tpKad h3 { font-family: "Cinzel", Georgia, serif; font-size: 1.5rem; font-weight: 600; color: #d8b45a; letter-spacing: 0.16em; margin: 2.4rem 0 1rem; padding-bottom: 0.6rem; border-bottom: 1px solid rgba(216,180,90,0.2); }
+.tpBaris { display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; -webkit-justify-content: space-between; justify-content: space-between; padding: 0.7rem 0; }
+.tpBaris label, .tpLabel { color: #c9c3b4; }
+.tpNota { font-size: 1.2rem; color: #8d877a; margin-top: 0.2rem; }
+.tpKad input[type=text], .tpKad input[type=number], .tpKad select {
+  font-family: inherit; font-size: 1.5rem; color: #f2efe6;
+  background: #1c1b18; border: 1px solid #3a352a; border-radius: 0.6rem;
+  padding: 0.5rem 0.8rem;
+}
+.tpKad input[type=number] { width: 6.5rem; text-align: center; }
+.tpKad input[type=text] { width: 28rem; }
+.tpKad input[type=checkbox] { width: 1.8rem; height: 1.8rem; }
+.tpKad input[type=range] { width: 22rem; }
+.tpJadual { width: 100%; border-collapse: collapse; }
+.tpJadual th { font-size: 1.2rem; font-weight: 500; color: #8d877a; text-align: center; padding: 0.4rem; }
+.tpJadual th:first-child, .tpJadual td:first-child { text-align: left; }
+.tpJadual td { text-align: center; padding: 0.5rem 0.4rem; border-top: 1px solid rgba(255,255,255,0.06); }
+.tpJadual td:first-child { font-family: "Cinzel", Georgia, serif; font-weight: 600; letter-spacing: 0.1em; }
+.tpFail { font-size: 1.25rem; color: #8d877a; margin-left: 1rem; }
+.tpBtn {
+  font-family: inherit; font-size: 1.4rem; font-weight: 600; cursor: pointer;
+  padding: 0.7rem 1.6rem; border-radius: 0.8rem;
+  background: #d8b45a; color: #0b0a07; border: 1px solid #d8b45a;
+}
+.tpBtn.sekunder { background: transparent; color: #d8b45a; }
+.tpBtn.kecil { font-size: 1.2rem; padding: 0.4rem 1rem; }
+.tpButang { margin-top: 2.6rem; text-align: right; }
+.tpButang .tpBtn { margin-left: 1rem; }
+.tpButang .kiri { float: left; margin-left: 0; }
+#tpPilihFail input[type=file] { display: none; }
+
+/* Peringatan aktifkan bunyi & butang henti azan */
+.pil {
+  display: none;
+  position: fixed; left: 50%; bottom: 5rem; z-index: 45;
+  transform: translate3d(-50%,0,0);
+  padding: 1rem 2rem; border-radius: 3rem;
+  font-size: 1.6rem; font-weight: 500; white-space: nowrap; cursor: pointer;
+}
+#pilBunyi { background: rgba(216,180,90,0.95); color: #0b0a07; }
+#pilHenti { background: #0b0a07; color: #e7c977; border: 1px solid #d8b45a; }
+
 /* ---------- Skrin lebar: jam lebih besar ---------- */
 @media (min-aspect-ratio: 3/2) {
   #jam { font-size: 16rem; }
@@ -466,6 +533,71 @@ window.addEventListener("orientationchange", skala);
   </div>
 </div>
 
+<button id="butangTetapan" title="Tetapan" aria-label="Tetapan">
+  <svg viewBox="0 0 24 24" fill="none" stroke="#d8b45a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+</button>
+
+<div id="pilBunyi" class="pil">Ketik skrin sekali untuk aktifkan bunyi azan</div>
+<div id="pilHenti" class="pil">&#9632; Henti azan</div>
+<audio id="audioAzan" preload="auto"></audio>
+
+<div id="tetapan">
+  <div class="tpKad">
+    <h2>Tetapan</h2>
+    <div class="tpNota">Tetapan disimpan dalam peranti ini sahaja.</div>
+
+    <h3>BUNYI AZAN</h3>
+    <div class="tpBaris"><label for="tpBunyi">Mainkan azan bila masuk waktu</label><input type="checkbox" id="tpBunyi"></div>
+    <div class="tpBaris"><label for="tpVolume">Kekuatan bunyi</label><input type="range" id="tpVolume" min="0" max="100" step="5"></div>
+    <div class="tpBaris" id="tpPilihFail">
+      <div><div class="tpLabel">Fail azan (MP3)</div><div class="tpNota">Tiada fail: loceng dimainkan sebagai ganti</div></div>
+      <div><span id="tpNamaAzan" class="tpFail">Tiada fail</span>
+        <label class="tpBtn sekunder kecil">Pilih fail<input type="file" id="tpFailAzan" accept="audio/*" style="display:none"></label>
+        <button class="tpBtn sekunder kecil" id="tpBuangAzan">Buang</button></div>
+    </div>
+    <div class="tpBaris" id="tpPilihFail2">
+      <div><div class="tpLabel">Fail azan Subuh (MP3)</div><div class="tpNota">Kosong: guna fail azan biasa</div></div>
+      <div><span id="tpNamaSubuh" class="tpFail">Tiada fail</span>
+        <label class="tpBtn sekunder kecil">Pilih fail<input type="file" id="tpFailSubuh" accept="audio/*" style="display:none"></label>
+        <button class="tpBtn sekunder kecil" id="tpBuangSubuh">Buang</button></div>
+    </div>
+    <div class="tpBaris"><label for="tpLoceng">Bunyi loceng bila tiba waktu iqamah</label><input type="checkbox" id="tpLoceng"></div>
+    <div class="tpBaris"><span class="tpLabel">Uji bunyi</span>
+      <div><button class="tpBtn sekunder kecil" id="tpUjiAzan">&#9654; Azan</button>
+        <button class="tpBtn sekunder kecil" id="tpUjiLoceng">&#9654; Loceng</button>
+        <button class="tpBtn sekunder kecil" id="tpHenti">&#9632; Henti</button></div>
+    </div>
+
+    <h3>WAKTU AZAN &amp; IQAMAH</h3>
+    <table class="tpJadual">
+      <tr><th>Waktu</th><th>Azan</th><th>Pelarasan (minit)</th><th>Iqamah selepas (minit)</th></tr>
+      <tr><td>Subuh</td><td><input type="checkbox" id="tpAzan0"></td><td><input type="number" id="tpLaras0" min="-30" max="30"></td><td><input type="number" id="tpIqamah0" min="0" max="60"></td></tr>
+      <tr><td>Syuruk</td><td>&ndash;</td><td><input type="number" id="tpLaras1" min="-30" max="30"></td><td>&ndash;</td></tr>
+      <tr><td>Zohor</td><td><input type="checkbox" id="tpAzan2"></td><td><input type="number" id="tpLaras2" min="-30" max="30"></td><td><input type="number" id="tpIqamah2" min="0" max="60"></td></tr>
+      <tr><td>Asar</td><td><input type="checkbox" id="tpAzan3"></td><td><input type="number" id="tpLaras3" min="-30" max="30"></td><td><input type="number" id="tpIqamah3" min="0" max="60"></td></tr>
+      <tr><td>Maghrib</td><td><input type="checkbox" id="tpAzan4"></td><td><input type="number" id="tpLaras4" min="-30" max="30"></td><td><input type="number" id="tpIqamah4" min="0" max="60"></td></tr>
+      <tr><td>Isyak</td><td><input type="checkbox" id="tpAzan5"></td><td><input type="number" id="tpLaras5" min="-30" max="30"></td><td><input type="number" id="tpIqamah5" min="0" max="60"></td></tr>
+    </table>
+    <div class="tpNota">Pelarasan: tambah atau tolak minit daripada waktu JAKIM (contoh 2 = lewat 2 minit). Biasanya 0.</div>
+
+    <h3>PAPARAN</h3>
+    <div class="tpBaris"><label for="tpNama">Nama dipaparkan</label><input type="text" id="tpNama" maxlength="40"></div>
+    <div class="tpBaris"><label for="tpSolat">Tempoh skrin &ldquo;matikan telefon&rdquo; selepas iqamah (minit)</label><input type="number" id="tpSolat" min="0" max="60"></div>
+    <div class="tpBaris"><label for="tpJumaat">Tempoh skrin Jumaat dari masuk waktu (minit)</label><input type="number" id="tpJumaat" min="0" max="120"></div>
+    <div class="tpBaris"><label for="tpPutaran">Kad Tarikh Penting bertukar setiap (saat)</label><input type="number" id="tpPutaran" min="3" max="60"></div>
+    <div class="tpBaris"><label for="tp24">Format jam 24 jam</label><input type="checkbox" id="tp24"></div>
+    <div class="tpBaris"><label for="tpMod">Mod paparan</label>
+      <select id="tpMod"><option value="auto">Auto</option><option value="penuh">Penuh (animasi)</option><option value="ringan">Ringan (peranti lama)</option></select></div>
+    <div class="tpBaris"><label for="tpLatar">Cahaya bergerak di latar</label><input type="checkbox" id="tpLatar"></div>
+
+    <div class="tpButang">
+      <button class="tpBtn sekunder kiri" id="tpAsal">Set semula asal</button>
+      <button class="tpBtn sekunder" id="tpBatal">Batal</button>
+      <button class="tpBtn" id="tpSimpan">Simpan</button>
+    </div>
+  </div>
+</div>
+
 <script>
 // ===== TETAPAN =====
 var NAMA = "WAKTU SOLAT";   // tukar kepada nama surau/masjid
@@ -479,6 +611,24 @@ var ANIMASI_LATAR = true; // false = matikan cahaya bergerak di latar (kurang be
 // "auto" = mod ringan untuk iPhone/iPad iOS 12 ke bawah, penuh untuk lain-lain.
 // Boleh dipaksa melalui link: ?mod=ringan atau ?mod=penuh
 var MOD = "auto";
+var LARAS_MINIT = [0, 0, 0, 0, 0, 0];               // pelarasan minit dari waktu JAKIM
+var AZAN_AKTIF = [true, false, true, true, true, true];
+var BUNYI_AZAN = true;
+var VOLUME = 0.8;
+var LOCENG_IQAMAH = false;
+
+// Nilai di atas ialah asal; tetapan yang disimpan dalam peranti (localStorage) menggantikannya
+var KUNCI_TETAPAN = ["NAMA", "FORMAT_24JAM", "IQAMAH_MINIT", "SOLAT_MINIT", "JUMAAT_MINIT", "PUTARAN_SAAT",
+  "ANIMASI_LATAR", "MOD", "LARAS_MINIT", "AZAN_AKTIF", "BUNYI_AZAN", "VOLUME", "LOCENG_IQAMAH"];
+var STORAN = "waktuSolat.tetapan";
+var ASAL = {};
+(function () {
+  for (var i = 0; i < KUNCI_TETAPAN.length; i++) ASAL[KUNCI_TETAPAN[i]] = JSON.parse(JSON.stringify(window[KUNCI_TETAPAN[i]]));
+  try {
+    var t = JSON.parse(localStorage.getItem(STORAN) || "null");
+    if (t) for (var k in t) if (ASAL.hasOwnProperty(k)) window[k] = t[k];
+  } catch (e) {}
+})();
 
 // ===== DATA JAKIM (zon NGS03) =====
 // Setiap baris: hijri|imsak|subuh|syuruk|zohor|asar|maghrib|isyak, bermula /*__START_LABEL__*/
@@ -544,7 +694,7 @@ function dataHari(d) {
   var p = DATA[i].split("|");
   var w = [];
   for (var j = 2; j < 8; j++) {
-    w.push(parseInt(p[j].substr(0, 2), 10) * 60 + parseInt(p[j].substr(2, 2), 10));
+    w.push(parseInt(p[j].substr(0, 2), 10) * 60 + parseInt(p[j].substr(2, 2), 10) + (LARAS_MINIT[j - 2] || 0));
   }
   return { hijri: p[0], waktu: w };
 }
@@ -785,6 +935,7 @@ function tick() {
       kiniLepas = kini; nextLepas = next;
     }
     kemasLapis(now, hari, kini, saatKini);
+    semakBunyi(now, kunci, hari, kini, saatKini);
 
     if (sasaran >= 0) {
       if (namaNext !== namaNextLepas) {
@@ -810,6 +961,263 @@ function tick() {
   setTimeout(tick, 1000 - new Date().getMilliseconds() + 20);
 }
 
+// ===== BUNYI =====
+var audio = null, ctxBunyi = null, bunyiTerbuka = false, failAudio = { azan: null, subuh: null };
+var azanLepas = "", locengLepas = "";
+
+// Pelayar sekat bunyi sehingga pengguna menyentuh page; sentuhan pertama "membuka kunci" bunyi
+function bukaKunciBunyi() {
+  if (bunyiTerbuka) return;
+  bunyiTerbuka = true;
+  try {
+    var AC = window.AudioContext || window.webkitAudioContext;
+    if (AC) {
+      ctxBunyi = ctxBunyi || new AC();
+      if (ctxBunyi.resume) ctxBunyi.resume();
+      var src = ctxBunyi.createBufferSource();
+      src.buffer = ctxBunyi.createBuffer(1, 1, 22050);
+      src.connect(ctxBunyi.destination);
+      src.start(0);
+    }
+  } catch (e) {}
+  if (audio.src) {
+    try {
+      audio.muted = true;
+      var pr = audio.play();
+      var selesai = function () { audio.pause(); audio.muted = false; };
+      if (pr && pr.then) pr.then(selesai, function () { audio.muted = false; }); else selesai();
+    } catch (e) { audio.muted = false; }
+  }
+  kemasPil();
+}
+
+function kemasPil() {
+  $("pilBunyi").style.display = (BUNYI_AZAN && !bunyiTerbuka) ? "block" : "none";
+  $("pilHenti").style.display = (audio && !audio.paused && !audio.muted) ? "block" : "none";
+}
+
+// Loceng lembut dijana dengan Web Audio (tiada fail diperlukan)
+function loceng(kali) {
+  try {
+    var AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return;
+    ctxBunyi = ctxBunyi || new AC();
+    var t0 = ctxBunyi.currentTime + 0.05;
+    for (var k = 0; k < kali; k++) {
+      var nada = [660, 990, 1320];
+      for (var j = 0; j < nada.length; j++) {
+        var osc = ctxBunyi.createOscillator(), g = ctxBunyi.createGain(), t = t0 + k * 1.6;
+        osc.frequency.value = nada[j];
+        g.gain.setValueAtTime(0.0001, t);
+        g.gain.exponentialRampToValueAtTime(VOLUME * 0.35 / (j + 1), t + 0.02);
+        g.gain.exponentialRampToValueAtTime(0.0001, t + 1.5);
+        osc.connect(g); g.connect(ctxBunyi.destination);
+        osc.start(t); osc.stop(t + 1.6);
+      }
+    }
+  } catch (e) {}
+}
+
+function mainAzan(subuh) {
+  var f = (subuh && failAudio.subuh) ? failAudio.subuh : failAudio.azan;
+  if (!f) { loceng(3); return; }
+  try {
+    if (audio.src !== f.data) audio.src = f.data;
+    audio.volume = VOLUME;
+    audio.muted = false;
+    audio.currentTime = 0;
+    var pr = audio.play();
+    if (pr && pr["catch"]) pr["catch"](function () { bunyiTerbuka = false; kemasPil(); });
+  } catch (e) {}
+}
+
+function hentiBunyi() {
+  try { audio.pause(); audio.currentTime = 0; } catch (e) {}
+  kemasPil();
+}
+
+// Dipanggil setiap saat: mainkan azan dalam minit pertama masuk waktu, loceng bila tiba iqamah
+function semakBunyi(now, kunci, hari, kini, saatKini) {
+  if (!BUNYI_AZAN || kini === 1) return;
+  var lalu = saatKini - hari.waktu[kini] * 60;
+  if (lalu < 0) return;
+  var id = kunci + "-" + kini;
+  if (lalu < 60 && AZAN_AKTIF[kini] && azanLepas !== id) {
+    azanLepas = id;
+    mainAzan(kini === 0);
+  }
+  var jumaat = kini === 2 && now.getDay() === 5;
+  var iq = IQAMAH_MINIT[kini] * 60;
+  if (LOCENG_IQAMAH && !jumaat && iq > 0 && lalu >= iq && lalu < iq + 60 && locengLepas !== id) {
+    locengLepas = id;
+    loceng(2);
+  }
+}
+
+// Fail azan disimpan sebagai data URL dalam IndexedDB (localStorage terlalu kecil untuk MP3)
+function bukaDB(cb) {
+  try {
+    var r = window.indexedDB.open("waktuSolat", 1);
+    r.onupgradeneeded = function () { r.result.createObjectStore("audio"); };
+    r.onsuccess = function () { cb(r.result); };
+    r.onerror = function () { cb(null); };
+  } catch (e) { cb(null); }
+}
+
+function urusAudio(op, kunci, nilai, cb) {
+  bukaDB(function (db) {
+    if (!db) { if (cb) cb(null, false); return; }
+    try {
+      var tx = db.transaction("audio", op === "baca" ? "readonly" : "readwrite"), st = tx.objectStore("audio");
+      var r = op === "baca" ? st.get(kunci) : op === "simpan" ? st.put(nilai, kunci) : st["delete"](kunci);
+      r.onsuccess = function () { if (cb) cb(r.result, true); };
+      r.onerror = function () { if (cb) cb(null, false); };
+    } catch (e) { if (cb) cb(null, false); }
+  });
+}
+
+function muatFailAudio() {
+  urusAudio("baca", "azan", null, function (f) {
+    failAudio.azan = f || null;
+    if (f && !audio.src) audio.src = f.data;
+    kemasNamaFail();
+  });
+  urusAudio("baca", "subuh", null, function (f) { failAudio.subuh = f || null; kemasNamaFail(); });
+}
+
+function kemasNamaFail() {
+  $("tpNamaAzan").innerHTML = failAudio.azan ? failAudio.azan.nama : "Tiada fail";
+  $("tpNamaSubuh").innerHTML = failAudio.subuh ? failAudio.subuh.nama : "Tiada fail";
+}
+
+function pilihFail(input, kunci) {
+  var f = input.files && input.files[0];
+  if (!f) return;
+  if (f.size > 15 * 1024 * 1024) { alert("Fail terlalu besar (maksimum 15MB)."); return; }
+  var namaEl = $(kunci === "azan" ? "tpNamaAzan" : "tpNamaSubuh");
+  namaEl.innerHTML = "Menyimpan...";
+  var fr = new FileReader();
+  fr.onload = function () {
+    var rekod = { nama: f.name, data: fr.result };
+    urusAudio("simpan", kunci, rekod, function (x, ok) {
+      if (!ok) { alert("Peranti ini tidak dapat menyimpan fail audio."); kemasNamaFail(); return; }
+      failAudio[kunci] = rekod;
+      if (kunci === "azan") audio.src = rekod.data;
+      kemasNamaFail();
+    });
+  };
+  fr.readAsDataURL(f);
+  input.value = "";
+}
+
+function buangFail(kunci) {
+  urusAudio("padam", kunci, null, function () {
+    failAudio[kunci] = null;
+    if (kunci === "azan") { hentiBunyi(); audio.removeAttribute("src"); }
+    kemasNamaFail();
+  });
+}
+
+// ===== PANEL TETAPAN =====
+var pemasaPutar = null;
+
+function isiBorang() {
+  $("tpBunyi").checked = BUNYI_AZAN;
+  $("tpVolume").value = Math.round(VOLUME * 100);
+  $("tpLoceng").checked = LOCENG_IQAMAH;
+  for (var i = 0; i < 6; i++) {
+    $("tpLaras" + i).value = LARAS_MINIT[i] || 0;
+    if (i === 1) continue;
+    $("tpAzan" + i).checked = !!AZAN_AKTIF[i];
+    $("tpIqamah" + i).value = IQAMAH_MINIT[i];
+  }
+  $("tpNama").value = NAMA;
+  $("tpSolat").value = SOLAT_MINIT;
+  $("tpJumaat").value = JUMAAT_MINIT;
+  $("tpPutaran").value = PUTARAN_SAAT;
+  $("tp24").checked = FORMAT_24JAM;
+  $("tpMod").value = MOD;
+  $("tpLatar").checked = ANIMASI_LATAR;
+  kemasNamaFail();
+}
+
+function nombor(id, min, maks, asal) {
+  var n = parseInt($(id).value, 10);
+  if (isNaN(n)) return asal;
+  return Math.max(min, Math.min(maks, n));
+}
+
+function bacaBorang() {
+  BUNYI_AZAN = $("tpBunyi").checked;
+  VOLUME = nombor("tpVolume", 0, 100, 80) / 100;
+  LOCENG_IQAMAH = $("tpLoceng").checked;
+  for (var i = 0; i < 6; i++) {
+    LARAS_MINIT[i] = nombor("tpLaras" + i, -30, 30, 0);
+    if (i === 1) continue;
+    AZAN_AKTIF[i] = $("tpAzan" + i).checked;
+    IQAMAH_MINIT[i] = nombor("tpIqamah" + i, 0, 60, 5);
+  }
+  NAMA = $("tpNama").value.replace(/[<>&]/g, "") || ASAL.NAMA;
+  SOLAT_MINIT = nombor("tpSolat", 0, 60, 15);
+  JUMAAT_MINIT = nombor("tpJumaat", 0, 120, 45);
+  PUTARAN_SAAT = nombor("tpPutaran", 3, 60, 7);
+  FORMAT_24JAM = $("tp24").checked;
+  MOD = $("tpMod").value;
+  ANIMASI_LATAR = $("tpLatar").checked;
+}
+
+function simpanTetapan() {
+  var t = {};
+  for (var i = 0; i < KUNCI_TETAPAN.length; i++) t[KUNCI_TETAPAN[i]] = window[KUNCI_TETAPAN[i]];
+  try { localStorage.setItem(STORAN, JSON.stringify(t)); } catch (e) { alert("Tetapan tidak dapat disimpan pada peranti ini."); }
+}
+
+// Terapkan tetapan baru tanpa muat semula page (kecuali mod/animasi latar berubah)
+function terapTetapan(modLama, latarLama) {
+  if (MOD !== modLama || ANIMASI_LATAR !== latarLama) { location.reload(); return; }
+  $("nama").innerHTML = NAMA;
+  tarikhLepas = ""; kiniLepas = -1; nextLepas = -1; modLepas = "-"; ampmLepas = "-";
+  clearInterval(pemasaPutar);
+  pemasaPutar = setInterval(putarAcara, PUTARAN_SAAT * 1000);
+  kemasPil();
+}
+
+function bukaTetapan() { bukaKunciBunyi(); isiBorang(); $("tetapan").classList.add("buka"); }
+function tutupTetapan() { $("tetapan").classList.remove("buka"); }
+
+function pasangTetapan() {
+  audio = $("audioAzan");
+  audio.addEventListener("playing", kemasPil);
+  audio.addEventListener("pause", kemasPil);
+  audio.addEventListener("ended", kemasPil);
+  $("butangTetapan").addEventListener("click", function (e) { e.stopPropagation(); bukaTetapan(); });
+  $("tpBatal").addEventListener("click", tutupTetapan);
+  $("tpSimpan").addEventListener("click", function () {
+    var modLama = MOD, latarLama = ANIMASI_LATAR;
+    bacaBorang(); simpanTetapan(); tutupTetapan(); terapTetapan(modLama, latarLama);
+  });
+  $("tpAsal").addEventListener("click", function () {
+    if (!confirm("Set semula semua tetapan kepada asal? (Fail azan tidak dipadam)")) return;
+    var modLama = MOD, latarLama = ANIMASI_LATAR;
+    for (var k in ASAL) window[k] = JSON.parse(JSON.stringify(ASAL[k]));
+    try { localStorage.removeItem(STORAN); } catch (e) {}
+    tutupTetapan(); terapTetapan(modLama, latarLama);
+  });
+  $("tpFailAzan").addEventListener("change", function () { pilihFail(this, "azan"); });
+  $("tpFailSubuh").addEventListener("change", function () { pilihFail(this, "subuh"); });
+  $("tpBuangAzan").addEventListener("click", function () { buangFail("azan"); });
+  $("tpBuangSubuh").addEventListener("click", function () { buangFail("subuh"); });
+  $("tpUjiAzan").addEventListener("click", function () { VOLUME = nombor("tpVolume", 0, 100, 80) / 100; mainAzan(false); });
+  $("tpUjiLoceng").addEventListener("click", function () { VOLUME = nombor("tpVolume", 0, 100, 80) / 100; loceng(2); });
+  $("tpHenti").addEventListener("click", hentiBunyi);
+  $("pilHenti").addEventListener("click", function (e) { e.stopPropagation(); hentiBunyi(); });
+  document.addEventListener("click", bukaKunciBunyi);
+  document.addEventListener("touchend", bukaKunciBunyi);
+  document.addEventListener("keydown", function (e) { if (e.keyCode === 27) tutupTetapan(); });
+  muatFailAudio();
+  kemasPil();
+}
+
 function pilihRingan() {
   var q = location.search.match(/mod=(ringan|penuh)/);
   var mod = q ? q[1] : MOD;
@@ -833,8 +1241,9 @@ function mula() {
   if (RINGAN) document.body.classList.add("ringan");
   $("nama").innerHTML = NAMA;
   $("julat").innerHTML = "Data sah hingga /*__END_LABEL__*/";
+  pasangTetapan();
   tick();
-  setInterval(putarAcara, PUTARAN_SAAT * 1000);
+  pemasaPutar = setInterval(putarAcara, PUTARAN_SAAT * 1000);
 }
 
 mula();
