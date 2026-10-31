@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Waktu Solat">
+<title>Waktu Solat</title>
+<style>
+/* Ditulis untuk Safari iOS 9: tiada CSS variables, tiada grid, flexbox berprefix */
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-box-sizing: border-box; }
+html, body { height: 100%; background: #070707; color: #f2efe6; overflow: hidden; }
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  -webkit-text-size-adjust: 100%;
+  -webkit-user-select: none;
+  cursor: default;
+}
+#app {
+  height: 100%;
+  display: -webkit-flex; display: flex;
+  -webkit-flex-direction: column; flex-direction: column;
+  padding: 2.4vw 3vw 1.6vw;
+}
+.row { display: -webkit-flex; display: flex; }
+
+/* Header */
+#top { -webkit-justify-content: space-between; justify-content: space-between; -webkit-align-items: flex-start; align-items: flex-start; }
+#nama { font-size: 3.4vw; font-weight: 600; color: #d8b45a; letter-spacing: 0.04em; }
+#zon { font-size: 1.7vw; color: #8d877a; margin-top: 0.4vw; }
+#tarikh { text-align: right; }
+#masihi { font-size: 2.5vw; font-weight: 500; }
+#hijri { font-size: 2.1vw; color: #d8b45a; margin-top: 0.4vw; }
+
+/* Jam & countdown */
+#tengah {
+  -webkit-flex: 1; flex: 1;
+  display: -webkit-flex; display: flex;
+  -webkit-flex-direction: column; flex-direction: column;
+  -webkit-justify-content: center; justify-content: center;
+  -webkit-align-items: center; align-items: center;
+}
+#jam { font-size: 17vw; font-weight: 200; line-height: 1; letter-spacing: -0.02em; white-space: nowrap; }
+#jam .saat { font-size: 7vw; color: #8d877a; font-weight: 300; margin-left: 0.6vw; }
+#jam .ampm { font-size: 3.2vw; color: #8d877a; font-weight: 400; margin-left: 1vw; letter-spacing: 0.08em; }
+#seterusnya { margin-top: 2vw; font-size: 3.2vw; color: #c9c3b4; white-space: nowrap; }
+#seterusnya b { color: #d8b45a; font-weight: 600; letter-spacing: 0.06em; }
+#kira { font-weight: 500; color: #f2efe6; margin-left: 0.6vw; }
+
+/* Kotak waktu */
+#waktu { -webkit-justify-content: space-between; justify-content: space-between; }
+.kotak {
+  -webkit-flex: 1; flex: 1;
+  margin: 0 0.6vw;
+  padding: 1.4vw 0 1.6vw;
+  text-align: center;
+  border: 1px solid #2a271f;
+  border-radius: 0.8vw;
+  background: #111;
+}
+.kotak:first-child { margin-left: 0; }
+.kotak:last-child { margin-right: 0; }
+.kotak .n { font-size: 2vw; letter-spacing: 0.1em; color: #a59f90; font-weight: 600; }
+.kotak .t { font-size: 4.4vw; font-weight: 300; margin-top: 0.5vw; }
+.kotak.kini { background: #d8b45a; border-color: #d8b45a; }
+.kotak.kini .n, .kotak.kini .t { color: #070707; }
+.kotak.kini .t { font-weight: 500; }
+.kotak.next { border-color: #d8b45a; }
+
+#bawah { margin-top: 1.4vw; -webkit-justify-content: space-between; justify-content: space-between; font-size: 1.4vw; color: #5f5a50; }
+
+/* Mesej data tamat */
+#tamat { display: none; margin-top: 1.4vw; padding: 1vw; text-align: center; background: #5a1d14; color: #fff; font-size: 2vw; border-radius: 0.8vw; }
+
+/* Lapisan penuh skrin: iqamah & solat */
+#lapis {
+  display: none;
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background: #070707;
+  -webkit-flex-direction: column; flex-direction: column;
+  -webkit-justify-content: center; justify-content: center;
+  -webkit-align-items: center; align-items: center;
+  text-align: center;
+  padding: 4vw;
+}
+#lapis.iqamah { background: #0d1a12; }
+#lapisTajuk { font-size: 4.4vw; font-weight: 600; color: #d8b45a; letter-spacing: 0.08em; }
+#lapisBesar { font-size: 16vw; font-weight: 200; line-height: 1.1; margin: 2vw 0; white-space: nowrap; }
+#lapisKecil { font-size: 3vw; color: #c9c3b4; margin-top: 1.4vw; }
+#lapis.solat #lapisBesar { font-size: 6vw; font-weight: 400; color: #f2efe6; }
+
+/* Potret: susun kotak 3 x 2 */
+@media (orientation: portrait) {
+  #app { padding: 4vw; }
+  #nama { font-size: 5vw; }
+  #zon { font-size: 2.6vw; }
+  #masihi { font-size: 3.6vw; }
+  #hijri { font-size: 3vw; }
+  #jam { font-size: 22vw; }
+  #jam .saat { font-size: 9vw; }
+  #jam .ampm { font-size: 4.4vw; }
+  #seterusnya { font-size: 4.6vw; }
+  #waktu { -webkit-flex-wrap: wrap; flex-wrap: wrap; }
+  .kotak, .kotak:first-child, .kotak:last-child { -webkit-flex: 0 0 32%; flex: 0 0 32%; margin: 0 0 2vw 0; padding: 2.4vw 0; }
+  .kotak .n { font-size: 3vw; }
+  .kotak .t { font-size: 6.4vw; }
+  #bawah { font-size: 2.2vw; }
+  #lapisTajuk { font-size: 6vw; }
+  #lapisBesar { font-size: 22vw; }
+  #lapis.solat #lapisBesar { font-size: 8vw; }
+  #lapisKecil { font-size: 4.4vw; }
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="top" class="row">
+    <div>
+      <div id="nama">WAKTU SOLAT</div>
+      <div id="zon">Zon NGS03 &middot; Seremban &amp; Port Dickson</div>
+    </div>
+    <div id="tarikh">
+      <div id="masihi">&nbsp;</div>
+      <div id="hijri">&nbsp;</div>
+    </div>
+  </div>
+
+  <div id="tengah">
+    <div id="jam">&nbsp;</div>
+    <div id="seterusnya">&nbsp;</div>
+  </div>
+
+  <div id="waktu" class="row">
+    <div class="kotak" id="k0"><div class="n">SUBUH</div><div class="t">--:--</div></div>
+    <div class="kotak" id="k1"><div class="n">SYURUK</div><div class="t">--:--</div></div>
+    <div class="kotak" id="k2"><div class="n">ZOHOR</div><div class="t">--:--</div></div>
+    <div class="kotak" id="k3"><div class="n">ASAR</div><div class="t">--:--</div></div>
+    <div class="kotak" id="k4"><div class="n">MAGHRIB</div><div class="t">--:--</div></div>
+    <div class="kotak" id="k5"><div class="n">ISYAK</div><div class="t">--:--</div></div>
+  </div>
+
+  <div id="tamat">Data waktu solat telah tamat. Sila kemas kini paparan ini.</div>
+
+  <div id="bawah" class="row">
+    <div>Sumber: JAKIM e-Solat</div>
+    <div id="julat">&nbsp;</div>
+  </div>
+</div>
+
+<div id="lapis">
+  <div id="lapisTajuk">&nbsp;</div>
+  <div id="lapisKecil">&nbsp;</div>
+  <div id="lapisBesar">&nbsp;</div>
+</div>
+
+<script>
+// ===== TETAPAN =====
+var NAMA = "WAKTU SOLAT";   // tukar kepada nama surau/masjid
+var FORMAT_24JAM = false;
+// Minit dari masuk waktu hingga iqamah: [Subuh, (Syuruk), Zohor, Asar, Maghrib, Isyak]
+var IQAMAH_MINIT = [5, 0, 5, 5, 5, 5];
+var SOLAT_MINIT = 15;    // tempoh skrin "matikan telefon" selepas iqamah
+var JUMAAT_MINIT = 45;   // tempoh skrin khutbah & solat Jumaat dari masuk waktu
+
+// ===== DATA JAKIM (zon NGS03) =====
+// Setiap baris: hijri|imsak|subuh|syuruk|zohor|asar|maghrib|isyak, bermula /*__START_LABEL__*/
+var DATA_MULA = Date.UTC(/*__START_UTC__*/);
+var DATA = /*__DATA__*/;
+
+var HARI = ["Ahad", "Isnin", "Selasa", "Rabu", "Khamis", "Jumaat", "Sabtu"];
+var BULAN = ["Januari", "Februari", "Mac", "April", "Mei", "Jun", "Julai", "Ogos", "September", "Oktober", "November", "Disember"];
+var BULAN_HIJRI = ["Muharram", "Safar", "Rabiulawal", "Rabiulakhir", "Jamadilawal", "Jamadilakhir", "Rejab", "Syaaban", "Ramadan", "Syawal", "Zulkaedah", "Zulhijjah"];
+var NAMA_WAKTU = ["SUBUH", "SYURUK", "ZOHOR", "ASAR", "MAGHRIB", "ISYAK"];
+
+function $(id) { return document.getElementById(id); }
+function pad(n) { return n < 10 ? "0" + n : "" + n; }
+
+function indeksHari(d) {
+  return Math.round((Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) - DATA_MULA) / 86400000);
+}
+
+// Pulangkan {hijri, waktu:[minit subuh..isyak]} atau null jika di luar julat data
+function dataHari(d) {
+  var i = indeksHari(d);
+  if (i < 0 || i >= DATA.length) return null;
+  var p = DATA[i].split("|");
+  var w = [];
+  for (var j = 2; j < 8; j++) {
+    w.push(parseInt(p[j].substr(0, 2), 10) * 60 + parseInt(p[j].substr(2, 2), 10));
+  }
+  return { hijri: p[0], waktu: w };
+}
+
+function formatWaktu(minit) {
+  var h = Math.floor(minit / 60), m = minit % 60;
+  if (!FORMAT_24JAM) h = h % 12 || 12;
+  return h + ":" + pad(m);
+}
+
+function formatHijri(s) {
+  var p = s.split("-");
+  return parseInt(p[2], 10) + " " + BULAN_HIJRI[parseInt(p[1], 10) - 1] + " " + p[0] + "H";
+}
+
+function formatKira(saat) {
+  var h = Math.floor(saat / 3600), m = Math.floor((saat % 3600) / 60), s = saat % 60;
+  return pad(h) + ":" + pad(m) + ":" + pad(s);
+}
+
+function labelAmPm(h) {
+  if (h < 12) return "PG";
+  if (h < 14) return "TGH";
+  if (h < 19) return "PTG";
+  return "MLM";
+}
+
+var kotak = [], tarikhLepas = "", kiniLepas = -1, nextLepas = -1, modLepas = "";
+
+// Tentukan lapisan yang patut dipapar: "" (tiada), "iqamah", "solat" atau "jumaat"
+function kemasLapis(now, hari, kini, saatKini) {
+  var mod = "", tajuk = "", besar = "", kecil = "";
+  var lalu = saatKini - hari.waktu[kini] * 60;   // negatif sebelum Subuh (kini = Isyak semalam)
+  var nama = NAMA_WAKTU[kini];
+  if (kini !== 1 && lalu >= 0) {
+    if (kini === 2 && now.getDay() === 5) {
+      if (lalu < JUMAAT_MINIT * 60) {
+        mod = "jumaat"; tajuk = "SOLAT JUMAAT";
+        besar = "Sila matikan telefon bimbit"; kecil = "Dengar khutbah dengan tenang";
+      }
+    } else if (lalu < IQAMAH_MINIT[kini] * 60) {
+      mod = "iqamah"; tajuk = "WAKTU " + nama + " TELAH MASUK";
+      besar = formatKira(IQAMAH_MINIT[kini] * 60 - lalu).substr(3); kecil = "Iqamah dalam";
+    } else if (lalu < (IQAMAH_MINIT[kini] + SOLAT_MINIT) * 60) {
+      mod = "solat"; tajuk = "SOLAT " + nama;
+      besar = "Sila matikan telefon bimbit"; kecil = "Luruskan dan rapatkan saf";
+    }
+  }
+  var lapis = $("lapis");
+  if (mod !== modLepas) {
+    lapis.className = mod === "jumaat" ? "solat" : mod;
+    lapis.style.display = mod ? "flex" : "none";
+    if (mod && lapis.style.display !== "flex") lapis.style.display = "-webkit-flex";  // pelayar lama
+    $("lapisTajuk").innerHTML = tajuk;
+    $("lapisKecil").innerHTML = kecil;
+    modLepas = mod;
+  }
+  if (mod) $("lapisBesar").innerHTML = besar;
+}
+
+function pasangHari(now, hari) {
+  $("masihi").innerHTML = HARI[now.getDay()] + ", " + now.getDate() + " " + BULAN[now.getMonth()] + " " + now.getFullYear();
+  $("hijri").innerHTML = formatHijri(hari.hijri);
+  var jumaat = now.getDay() === 5;
+  for (var i = 0; i < 6; i++) {
+    kotak[i].n.innerHTML = (i === 2 && jumaat) ? "JUMAAT" : NAMA_WAKTU[i];
+    kotak[i].t.innerHTML = formatWaktu(hari.waktu[i]);
+  }
+}
+
+function tandaKotak(kini, next) {
+  for (var i = 0; i < 6; i++) {
+    kotak[i].el.className = "kotak" + (i === kini ? " kini" : "") + (i === next ? " next" : "");
+  }
+}
+
+function tick() {
+  var now = new Date();
+  var hari = dataHari(now);
+
+  if (!hari) {
+    $("tamat").style.display = "block";
+    $("seterusnya").innerHTML = "&nbsp;";
+  } else {
+    var kunci = now.getFullYear() + "-" + now.getMonth() + "-" + now.getDate();
+    if (kunci !== tarikhLepas) {
+      pasangHari(now, hari);
+      tarikhLepas = kunci;
+      kiniLepas = -1; nextLepas = -1;
+    }
+
+    var saatKini = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
+    var kini = 5, next = -1, baki = 0;  // sebelum Subuh, waktu semasa masih Isyak
+    for (var i = 0; i < 6; i++) {
+      var s = hari.waktu[i] * 60;
+      if (s <= saatKini) { kini = i; }
+      else if (next === -1) { next = i; baki = s - saatKini; }
+    }
+    var namaNext;
+    if (next === -1) {
+      // Selepas Isyak: kira ke Subuh esok
+      var esok = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+      var hariEsok = dataHari(esok);
+      namaNext = "SUBUH";
+      baki = hariEsok ? (86400 - saatKini) + hariEsok.waktu[0] * 60 : -1;
+    } else {
+      namaNext = (next === 2 && now.getDay() === 5) ? "JUMAAT" : NAMA_WAKTU[next];
+    }
+
+    if (kini !== kiniLepas || next !== nextLepas) {
+      tandaKotak(kini, next === -1 ? 0 : next);  // selepas Isyak, tanda Subuh esok
+      kiniLepas = kini; nextLepas = next;
+    }
+    kemasLapis(now, hari, kini, saatKini);
+    $("seterusnya").innerHTML = baki >= 0
+      ? "<b>" + namaNext + "</b> dalam <span id=\"kira\">" + formatKira(baki) + "</span>"
+      : "&nbsp;";
+  }
+
+  var h = now.getHours();
+  var hp = FORMAT_24JAM ? pad(h) : (h % 12 || 12);
+  $("jam").innerHTML = hp + ":" + pad(now.getMinutes()) +
+    "<span class=\"saat\">" + pad(now.getSeconds()) + "</span>" +
+    (FORMAT_24JAM ? "" : "<span class=\"ampm\">" + labelAmPm(h) + "</span>");
+
+  // Jadualkan tepat pada saat seterusnya supaya jam tak "melompat"
+  setTimeout(tick, 1000 - new Date().getMilliseconds() + 20);
+}
+
+function mula() {
+  for (var i = 0; i < 6; i++) {
+    var el = $("k" + i);
+    kotak.push({ el: el, n: el.children[0], t: el.children[1] });
+  }
+  $("nama").innerHTML = NAMA;
+  $("julat").innerHTML = "Data sah hingga /*__END_LABEL__*/";
+  tick();
+}
+
+mula();
+</script>
+</body>
+</html>
