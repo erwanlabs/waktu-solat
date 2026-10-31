@@ -63,7 +63,7 @@ body.ringan #lapisCorak { display: none; }
 body.ringan .kotak.next:before { opacity: 1; }
 body.ringan .kotak.kini { transform: none; }
 body.ringan #kilau { display: none; }
-body.ringan #jam, body.ringan #lapisKira { font-weight: 300; }
+body.ringan #lapisKira { font-weight: 300; }
 body.ringan #jamS, body.ringan .kotak .t, body.ringan #zon, body.ringan #seterusnya,
 body.ringan #lapisKecil, body.ringan #bawah { font-weight: 400; }
 body.ringan .kotak .n { font-weight: 600; }
@@ -97,43 +97,66 @@ body.ringan .kotak.next { border-color: #a8873f; }
 
 /* Header */
 #top {
-  -webkit-justify-content: space-between; justify-content: space-between;
-  -webkit-align-items: flex-start; align-items: flex-start;
+  -webkit-flex-direction: column; flex-direction: column;
+  -webkit-align-items: center; align-items: center;
+  text-align: center;
   animation: turun 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 #nama { font-size: 3.2rem; font-weight: 600; color: #d8b45a; letter-spacing: 0.06em; }
 #zon { font-size: 1.6rem; color: #8d877a; margin-top: 0.2rem; font-weight: 300; }
-#tarikh { text-align: right; }
-#masihi { font-size: 2.3rem; font-weight: 500; }
-#hijri { font-size: 2.3rem; color: #d8b45a; margin-top: 0.2rem; font-weight: 500; white-space: nowrap; }
-#hijri svg { width: 1.7rem; height: 1.7rem; vertical-align: -0.15rem; margin-right: 0.6rem; }
+
+/* Kad kiri (tarikh) & kad kanan (tarikh penting): gaya sepadan */
+.kad {
+  width: 26rem;
+  display: -webkit-flex; display: flex;
+  -webkit-flex-direction: column; flex-direction: column;
+  -webkit-justify-content: center; justify-content: center;
+  padding: 1.8rem 2rem;
+  border: 1px solid rgba(216,180,90,0.18);
+  border-radius: 1.2rem;
+  background: rgba(255,255,255,0.03);
+}
+#kadTarikh { animation: masukKiri 1s 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+#hariNama { font-family: "Cinzel", Georgia, serif; font-size: 3.4rem; font-weight: 600; margin-top: 0.8rem; line-height: 1.1; }
+#masihi { font-size: 2.1rem; font-weight: 500; color: #c9c3b4; margin-top: 0.3rem; }
+.garis { height: 1px; background: rgba(216,180,90,0.25); margin: 1.8rem 0 1.6rem; }
+#hijri { margin-top: 0.8rem; white-space: nowrap; }
+#hijri svg { width: 2.4rem; height: 2.4rem; margin-right: 0.8rem; vertical-align: 0.4rem; }
+#hijriHari { font-size: 6rem; font-weight: 300; color: #d8b45a; line-height: 1; }
+#hijriBulan { font-family: "Cinzel", Georgia, serif; font-size: 2.1rem; font-weight: 600; margin-top: 0.6rem; }
+#hijriTahun { font-size: 1.6rem; color: #a59f90; margin-top: 0.2rem; }
+@keyframes masukKiri { from { opacity: 0; transform: translate3d(-3rem,0,0); } to { opacity: 1; transform: translate3d(0,0,0); } }
 
 /* Jam */
 #tengah {
   -webkit-flex: 1; flex: 1;
   display: -webkit-flex; display: flex;
-  -webkit-align-items: center; align-items: center;
+  -webkit-align-items: stretch; align-items: stretch;
+  padding: 2.2rem 0 2.6rem;
 }
 #blokJam {
   -webkit-flex: 1; flex: 1;
   display: -webkit-flex; display: flex;
   -webkit-flex-direction: column; flex-direction: column;
+  -webkit-justify-content: center; justify-content: center;
   -webkit-align-items: center; align-items: center;
+  margin: 0 1.6rem;
   animation: zum 1.1s 0.15s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
-#jam { font-size: 13.5rem; font-weight: 200; line-height: 1; white-space: nowrap; }
+#jam { font-size: 11rem; font-weight: 600; line-height: 1; white-space: nowrap; }
+#jam .d { width: 0.68em; }
 #jam .titik { display: inline-block; margin: 0 -0.02em; animation: kelip 2s ease-in-out infinite; }
-#sisi { display: inline-block; vertical-align: top; margin-left: 1.2rem; margin-top: 2.2rem; text-align: left; }
-#jamS { display: block; font-size: 5rem; font-weight: 300; color: #a59f90; line-height: 1; }
-#ampm { display: block; font-size: 2.6rem; font-weight: 500; color: #d8b45a; letter-spacing: 0.14em; margin-top: 1rem; }
+#sisi { display: inline-block; vertical-align: top; margin-left: 1rem; margin-top: 1.6rem; text-align: left; }
+#jamS { display: block; font-size: 4.2rem; font-weight: 500; color: #a59f90; line-height: 1; }
+#ampm { display: block; font-size: 2.2rem; font-weight: 500; color: #d8b45a; letter-spacing: 0.14em; margin-top: 1rem; }
 @keyframes kelip { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
 
 /* Waktu seterusnya + bar kemajuan */
-#seterusnya { margin-top: 1.4rem; font-size: 2.6rem; color: #c9c3b4; white-space: nowrap; font-weight: 300; }
+#seterusnya { margin-top: 1.8rem; font-size: 2.3rem; color: #c9c3b4; white-space: nowrap; font-weight: 300; }
 #namaNext { display: inline-block; color: #d8b45a; font-weight: 600; letter-spacing: 0.08em; }
 #namaNext.gulung { animation: gulung 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); }
 #kira { font-weight: 500; color: #f2efe6; margin-left: 0.4rem; }
-#maju { position: relative; width: 38rem; height: 0.45rem; margin-top: 1.6rem; border-radius: 1rem; background: rgba(255,255,255,0.08); overflow: hidden; }
+#maju { position: relative; width: 34rem; height: 0.45rem; margin-top: 1.6rem; border-radius: 1rem; background: rgba(255,255,255,0.08); overflow: hidden; }
 #majuIsi {
   position: absolute; top: 0; left: 0; bottom: 0; width: 100%;
   border-radius: 1rem;
@@ -147,19 +170,14 @@ body.ringan .kotak.next { border-color: #a8873f; }
   background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.16), rgba(255,255,255,0));
   animation: kilau 3.2s ease-in-out infinite;
 }
-@keyframes kilau { from { transform: translate3d(-12rem,0,0); } to { transform: translate3d(40rem,0,0); } }
+@keyframes kilau { from { transform: translate3d(-12rem,0,0); } to { transform: translate3d(36rem,0,0); } }
 
 /* Panel acara Islam */
 #acara {
-  width: 28rem; margin-left: 2rem;
-  padding: 1.6rem 2rem 1.4rem;
-  border: 1px solid rgba(216,180,90,0.18);
-  border-radius: 1.2rem;
-  background: rgba(255,255,255,0.03);
   animation: masukKanan 1s 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 .acaraLabel { font-family: "Cinzel", Georgia, serif; font-size: 1.25rem; font-weight: 600; color: #d8b45a; letter-spacing: 0.2em; }
-#acaraNama { font-family: "Cinzel", Georgia, serif; font-size: 2.2rem; font-weight: 600; margin-top: 0.9rem; line-height: 1.2; }
+#acaraNama { font-family: "Cinzel", Georgia, serif; font-size: 2.1rem; font-weight: 600; margin-top: 0.8rem; line-height: 1.2; }
 #acaraTarikh { font-size: 1.3rem; color: #a59f90; margin-top: 0.3rem; }
 #acaraKira { margin-top: 0.8rem; white-space: nowrap; }
 #acaraHari { font-size: 6rem; font-weight: 300; color: #d8b45a; line-height: 1; }
@@ -289,12 +307,16 @@ body.ringan .kotak.next { border-color: #a8873f; }
   #app { padding: 3.4rem 4rem 2.6rem; }
   #nama { font-size: 4.8rem; }
   #zon { font-size: 2.5rem; }
-  #masihi { font-size: 3.4rem; }
-  #hijri { font-size: 3.4rem; }
-  #hijri svg { width: 2.6rem; height: 2.6rem; }
-  #tengah { -webkit-flex-direction: column; flex-direction: column; -webkit-justify-content: center; justify-content: center; }
-  #blokJam { -webkit-flex: none; flex: none; }
-  #acara { width: 100%; margin: 2.4rem 0 0; padding: 2.2rem 3rem 1.6rem; border-radius: 2rem; }
+  #tengah { -webkit-flex-wrap: wrap; flex-wrap: wrap; -webkit-align-content: center; align-content: center; -webkit-justify-content: space-between; justify-content: space-between; padding: 1rem 0 0; }
+  #blokJam { -webkit-flex: 0 0 100%; flex: 0 0 100%; -webkit-order: -1; order: -1; margin: 0 0 3rem; }
+  .kad { width: 48.5%; padding: 2.2rem 2.6rem; border-radius: 2rem; }
+  #hariNama { font-size: 4.4rem; }
+  #masihi { font-size: 2.8rem; }
+  .garis { margin: 1.6rem 0 1.4rem; }
+  #hijri svg { width: 3.2rem; height: 3.2rem; }
+  #hijriHari { font-size: 8rem; }
+  #hijriBulan { font-size: 2.8rem; }
+  #hijriTahun { font-size: 2.2rem; }
   #acaraSenarai { margin-top: 0.8rem; }
   #acaraSenarai .ai:nth-child(n+3) { display: none; }
   .acaraLabel { font-size: 2rem; }
@@ -310,8 +332,8 @@ body.ringan .kotak.next { border-color: #a8873f; }
   .lencana { font-size: 1.7rem; top: -1.8rem; padding: 0.35rem 1.3rem; }
   .lencana i { width: 0.9rem; height: 0.9rem; }
   .kotak.kini .t { font-size: 6.6rem; }
-  #jam { font-size: 18rem; }
-  #jamS { font-size: 8rem; }
+  #jam { font-size: 17rem; }
+  #jamS { font-size: 6.4rem; }
   #ampm { font-size: 3.6rem; }
   #sisi { margin-top: 3.4rem; }
   #seterusnya { font-size: 4.4rem; }
@@ -352,24 +374,28 @@ window.addEventListener("orientationchange", skala);
 
 <div id="app">
   <div id="top" class="row">
-    <div>
-      <div id="nama">WAKTU SOLAT</div>
-      <div id="zon">Zon NGS03 &middot; Seremban &amp; Port Dickson</div>
-    </div>
-    <div id="tarikh">
-      <div id="masihi">&nbsp;</div>
-      <div id="hijri"><svg viewBox="0 0 24 24" fill="#d8b45a"><path d="M14.5 2.2A10 10 0 1 0 21.8 15 8 8 0 1 1 14.5 2.2z"/></svg><span id="hijriTeks">&nbsp;</span></div>
-    </div>
+    <div id="nama">WAKTU SOLAT</div>
+    <div id="zon">Zon NGS03 &middot; Seremban &amp; Port Dickson</div>
   </div>
 
   <div id="tengah">
+    <div id="kadTarikh" class="kad">
+      <div class="acaraLabel">HARI INI</div>
+      <div id="hariNama">&nbsp;</div>
+      <div id="masihi">&nbsp;</div>
+      <div class="garis"></div>
+      <div class="acaraLabel">KALENDAR HIJRI</div>
+      <div id="hijri"><svg viewBox="0 0 24 24" fill="#d8b45a"><path d="M14.5 2.2A10 10 0 1 0 21.8 15 8 8 0 1 1 14.5 2.2z"/></svg><span id="hijriHari">&nbsp;</span></div>
+      <div id="hijriBulan">&nbsp;</div>
+      <div id="hijriTahun">&nbsp;</div>
+    </div>
     <div id="blokJam">
     <div id="jam"><span id="jamH"></span><span class="titik">:</span><span id="jamM"></span><span id="sisi"><span id="jamS"></span><span id="ampm"></span></span></div>
     <div id="seterusnya"><span id="namaNext">&nbsp;</span> dalam <span id="kira"></span></div>
     <div id="maju"><div id="majuIsi"></div><div id="kilau"></div></div>
     </div>
-    <div id="acara">
-      <div class="acaraLabel">ACARA ISLAM</div>
+    <div id="acara" class="kad">
+      <div class="acaraLabel">TARIKH PENTING</div>
       <div id="acaraNama">&nbsp;</div>
       <div id="acaraTarikh">&nbsp;</div>
       <div id="acaraKira"><span id="acaraHari">&nbsp;</span><span id="acaraUnit"></span></div>
@@ -593,10 +619,10 @@ function labelHari(n) {
 function pasangAcara(now) {
   var a = cariAcara(now, 4);
   if (!a.length) {
-    $("acara").style.display = "none";
+    $("acara").style.visibility = "hidden";
     return;
   }
-  $("acara").style.display = "";
+  $("acara").style.visibility = "visible";
   $("acaraNama").innerHTML = a[0].nama;
   $("acaraTarikh").innerHTML = formatHijri(a[0].hijri) + " &middot; " + formatMasihiPendek(a[0].masihi);
   if (a[0].hari === 0) {
@@ -616,8 +642,12 @@ function pasangAcara(now) {
 }
 
 function pasangHari(now, hari) {
-  $("masihi").innerHTML = HARI[now.getDay()] + ", " + now.getDate() + " " + BULAN[now.getMonth()] + " " + now.getFullYear();
-  $("hijriTeks").innerHTML = formatHijri(hari.hijri);
+  $("hariNama").innerHTML = HARI[now.getDay()];
+  $("masihi").innerHTML = now.getDate() + " " + BULAN[now.getMonth()] + " " + now.getFullYear();
+  var hj = hari.hijri.split("-");
+  $("hijriHari").innerHTML = parseInt(hj[2], 10);
+  $("hijriBulan").innerHTML = BULAN_HIJRI[parseInt(hj[1], 10) - 1];
+  $("hijriTahun").innerHTML = hj[0] + " Hijrah";
   pasangAcara(now);
   var jumaat = now.getDay() === 5;
   for (var i = 0; i < 6; i++) {
