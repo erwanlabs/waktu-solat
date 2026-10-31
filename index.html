@@ -69,6 +69,7 @@ body.ringan #lapisKecil, body.ringan #bawah { font-weight: 400; }
 body.ringan .kotak .n { font-weight: 600; }
 body.ringan .kotak { background: #131310; border-color: #2e2a20; }
 body.ringan .kotak.kini { background: #d8b45a; border-color: #e7c977; }
+body.ringan .kotak.kini .t, body.ringan .kotak.kini .n { font-weight: 600; }
 body.ringan .kotak.next { border-color: #a8873f; }
 
 /* ---------- Susun atur ---------- */
@@ -107,11 +108,11 @@ body.ringan .kotak.next { border-color: #a8873f; }
 
 /* Kad kiri (tarikh) & kad kanan (tarikh penting): gaya sepadan */
 .kad {
-  width: 26rem;
+  width: 24rem;
   display: -webkit-flex; display: flex;
   -webkit-flex-direction: column; flex-direction: column;
   -webkit-justify-content: center; justify-content: center;
-  padding: 1.8rem 2rem;
+  padding: 1.6rem 1.8rem;
   border: 1px solid rgba(216,180,90,0.18);
   border-radius: 1.2rem;
   background: rgba(255,255,255,0.03);
@@ -140,13 +141,13 @@ body.ringan .kotak.next { border-color: #a8873f; }
   -webkit-flex-direction: column; flex-direction: column;
   -webkit-justify-content: center; justify-content: center;
   -webkit-align-items: center; align-items: center;
-  margin: 0 1.6rem;
+  margin: 0 1rem;
   animation: zum 1.1s 0.15s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
-#jam { font-size: 11rem; font-weight: 600; line-height: 1; white-space: nowrap; }
-#jam .d { width: 0.68em; }
+#jam { font-size: 12.8rem; font-weight: 600; line-height: 1; white-space: nowrap; }
+#jam .d { width: 0.66em; }
 #jam .titik { display: inline-block; margin: 0 -0.02em; animation: kelip 2s ease-in-out infinite; }
-#sisi { display: inline-block; vertical-align: top; margin-left: 1rem; margin-top: 1.6rem; text-align: left; }
+#sisi { display: inline-block; vertical-align: top; margin-left: 0.8rem; margin-top: 1.8rem; text-align: left; }
 #jamS { display: block; font-size: 4.2rem; font-weight: 500; color: #a59f90; line-height: 1; }
 #ampm { display: block; font-size: 2.2rem; font-weight: 500; color: #d8b45a; letter-spacing: 0.14em; margin-top: 1rem; }
 @keyframes kelip { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
@@ -302,13 +303,31 @@ body.ringan .kotak.next { border-color: #a8873f; }
 #lapis.akhir #lapisKira { color: #f6e3a8; animation: denyut 1s ease-in-out infinite; }
 @keyframes denyut { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
 
+/* ---------- Skrin lebar: jam lebih besar ---------- */
+@media (min-aspect-ratio: 3/2) {
+  #jam { font-size: 16rem; }
+  #jamS { font-size: 5rem; }
+  #ampm { font-size: 2.6rem; }
+  #sisi { margin-top: 2.4rem; }
+  #seterusnya { font-size: 2.7rem; }
+  #maju { width: 42rem; }
+}
+@media (min-aspect-ratio: 16/9) {
+  #jam { font-size: 19rem; }
+  #jamS { font-size: 5.8rem; }
+  #ampm { font-size: 3rem; }
+  #sisi { margin-top: 2.9rem; }
+  #seterusnya { font-size: 3rem; }
+  #maju { width: 50rem; }
+}
+
 /* ---------- Potret: susun kotak 3 x 2 ---------- */
 @media (orientation: portrait) {
   #app { padding: 3.4rem 4rem 2.6rem; }
   #nama { font-size: 4.8rem; }
   #zon { font-size: 2.5rem; }
   #tengah { -webkit-flex-wrap: wrap; flex-wrap: wrap; -webkit-align-content: center; align-content: center; -webkit-justify-content: space-between; justify-content: space-between; padding: 1rem 0 0; }
-  #blokJam { -webkit-flex: 0 0 100%; flex: 0 0 100%; -webkit-order: -1; order: -1; margin: 0 0 3rem; }
+  #blokJam { -webkit-flex: 0 0 100%; flex: 0 0 100%; -webkit-order: -1; order: -1; margin: 0 0 2rem; }
   .kad { width: 48.5%; padding: 2.2rem 2.6rem; border-radius: 2rem; }
   #hariNama { font-size: 4.4rem; }
   #masihi { font-size: 2.8rem; }
@@ -332,7 +351,7 @@ body.ringan .kotak.next { border-color: #a8873f; }
   .lencana { font-size: 1.7rem; top: -1.8rem; padding: 0.35rem 1.3rem; }
   .lencana i { width: 0.9rem; height: 0.9rem; }
   .kotak.kini .t { font-size: 6.6rem; }
-  #jam { font-size: 17rem; }
+  #jam { font-size: 17.5rem; }
   #jamS { font-size: 6.4rem; }
   #ampm { font-size: 3.6rem; }
   #sisi { margin-top: 3.4rem; }
