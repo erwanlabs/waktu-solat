@@ -550,7 +550,7 @@ window.addEventListener("orientationchange", skala);
     <div class="tpBaris"><label for="tpBunyi">Mainkan azan bila masuk waktu</label><input type="checkbox" id="tpBunyi"></div>
     <div class="tpBaris"><label for="tpVolume">Kekuatan bunyi</label><input type="range" id="tpVolume" min="0" max="100" step="5"></div>
     <div class="tpBaris" id="tpPilihFail">
-      <div><div class="tpLabel">Fail azan (MP3)</div><div class="tpNota">Tiada fail: loceng dimainkan sebagai ganti</div></div>
+      <div><div class="tpLabel">Fail azan (MP3)</div><div class="tpNota">Kosong: guna azan asal terbina dalam</div></div>
       <div><span id="tpNamaAzan" class="tpFail">Tiada fail</span>
         <label class="tpBtn sekunder kecil">Pilih fail<input type="file" id="tpFailAzan" accept="audio/*" style="display:none"></label>
         <button class="tpBtn sekunder kecil" id="tpBuangAzan">Buang</button></div>
@@ -561,6 +561,7 @@ window.addEventListener("orientationchange", skala);
         <label class="tpBtn sekunder kecil">Pilih fail<input type="file" id="tpFailSubuh" accept="audio/*" style="display:none"></label>
         <button class="tpBtn sekunder kecil" id="tpBuangSubuh">Buang</button></div>
     </div>
+    <div class="tpNota" id="tpKredit"></div>
     <div class="tpBaris"><label for="tpLoceng">Bunyi loceng bila tiba waktu iqamah</label><input type="checkbox" id="tpLoceng"></div>
     <div class="tpBaris"><span class="tpLabel">Uji bunyi</span>
       <div><button class="tpBtn sekunder kecil" id="tpUjiAzan">&#9654; Azan</button>
@@ -963,6 +964,9 @@ function tick() {
 
 // ===== BUNYI =====
 var audio = null, ctxBunyi = null, bunyiTerbuka = false, failAudio = { azan: null, subuh: null };
+// Azan asal yang disertakan dalam repo; dipakai bila tiada fail dimuat naik
+var AZAN_ASAL = { nama: "Azan asal (terbina dalam)", data: "audio/azan.mp3" };
+var AZAN_KREDIT = "/*__AZAN_KREDIT__*/";
 var azanLepas = "", locengLepas = "";
 
 // Pelayar sekat bunyi sehingga pengguna menyentuh page; sentuhan pertama "membuka kunci" bunyi
@@ -1019,16 +1023,18 @@ function loceng(kali) {
 }
 
 function mainAzan(subuh) {
-  var f = (subuh && failAudio.subuh) ? failAudio.subuh : failAudio.azan;
-  if (!f) { loceng(3); return; }
+  var f = (subuh && failAudio.subuh) ? failAudio.subuh : (failAudio.azan || AZAN_ASAL);
   try {
-    if (audio.src !== f.data) audio.src = f.data;
+    if (audio.getAttribute("src") !== f.data) audio.src = f.data;
     audio.volume = VOLUME;
     audio.muted = false;
     audio.currentTime = 0;
     var pr = audio.play();
-    if (pr && pr["catch"]) pr["catch"](function () { bunyiTerbuka = false; kemasPil(); });
-  } catch (e) {}
+    if (pr && pr["catch"]) pr["catch"](function (e) {
+      if (e && e.name === "NotAllowedError") { bunyiTerbuka = false; kemasPil(); }
+      else loceng(3);  // fail tak dapat dimainkan: guna loceng
+    });
+  } catch (e) { loceng(3); }
 }
 
 function hentiBunyi() {
@@ -1079,14 +1085,14 @@ function urusAudio(op, kunci, nilai, cb) {
 function muatFailAudio() {
   urusAudio("baca", "azan", null, function (f) {
     failAudio.azan = f || null;
-    if (f && !audio.src) audio.src = f.data;
+    audio.src = (f || AZAN_ASAL).data;
     kemasNamaFail();
   });
   urusAudio("baca", "subuh", null, function (f) { failAudio.subuh = f || null; kemasNamaFail(); });
 }
 
 function kemasNamaFail() {
-  $("tpNamaAzan").innerHTML = failAudio.azan ? failAudio.azan.nama : "Tiada fail";
+  $("tpNamaAzan").innerHTML = failAudio.azan ? failAudio.azan.nama : AZAN_ASAL.nama;
   $("tpNamaSubuh").innerHTML = failAudio.subuh ? failAudio.subuh.nama : "Tiada fail";
 }
 
@@ -1113,7 +1119,7 @@ function pilihFail(input, kunci) {
 function buangFail(kunci) {
   urusAudio("padam", kunci, null, function () {
     failAudio[kunci] = null;
-    if (kunci === "azan") { hentiBunyi(); audio.removeAttribute("src"); }
+    if (kunci === "azan") { hentiBunyi(); audio.src = AZAN_ASAL.data; }
     kemasNamaFail();
   });
 }
@@ -1214,6 +1220,7 @@ function pasangTetapan() {
   document.addEventListener("click", bukaKunciBunyi);
   document.addEventListener("touchend", bukaKunciBunyi);
   document.addEventListener("keydown", function (e) { if (e.keyCode === 27) tutupTetapan(); });
+  $("tpKredit").innerHTML = "Azan asal: " + AZAN_KREDIT;
   muatFailAudio();
   kemasPil();
 }

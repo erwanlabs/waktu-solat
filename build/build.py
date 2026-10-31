@@ -49,6 +49,10 @@ def main(template_path, out_path, *json_paths):
     for nama, w in re.findall(r"/\*__FONT_([a-z]+)-(\d+)__\*/", html):
         with open(os.path.join(font_dir, f"{nama}-latin-{w}-normal.woff"), "rb") as f:
             html = html.replace(f"/*__FONT_{nama}-{w}__*/", "data:font/woff;base64," + base64.b64encode(f.read()).decode())
+    # Kredit azan asal (lesen terbuka) dari audio/KREDIT.txt, baris pertama
+    kredit_path = os.path.join(os.path.dirname(os.path.abspath(template_path)), "..", "audio", "KREDIT.txt")
+    kredit = open(kredit_path, encoding="utf-8").readline().strip() if os.path.exists(kredit_path) else "-"
+    html = html.replace("/*__AZAN_KREDIT__*/", kredit.replace("\\", "").replace('"', "'"))
     assert "/*__" not in html
     open(out_path, "w", encoding="utf-8").write(html)
     print(f"{len(rows)} hari, {start} hingga {end}, {len(html)} bait -> {out_path}")
