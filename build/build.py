@@ -1,5 +1,7 @@
 """Bina index.html: gabung data JAKIM (JSON tahunan) ke dalam template."""
+import base64
 import json
+import os
 import sys
 from datetime import date, timedelta
 
@@ -41,6 +43,11 @@ def main(template_path, out_path, *json_paths):
             .replace("/*__START_UTC__*/", f"{start.year},{start.month - 1},{start.day}")
             .replace("/*__START_LABEL__*/", start.isoformat())
             .replace("/*__END_LABEL__*/", f"{end.day} {BULAN_PENUH[end.month - 1]} {end.year}"))
+    # Benamkan font Poppins (woff, serasi Safari 9) terus dalam HTML: tiada muat turun berasingan
+    font_dir = os.path.join(os.path.dirname(os.path.abspath(template_path)), "..", "fonts")
+    for w in (200, 300, 400, 500, 600):
+        with open(os.path.join(font_dir, f"poppins-latin-{w}-normal.woff"), "rb") as f:
+            html = html.replace(f"/*__FONT_{w}__*/", "data:font/woff;base64," + base64.b64encode(f.read()).decode())
     assert "/*__" not in html
     open(out_path, "w", encoding="utf-8").write(html)
     print(f"{len(rows)} hari, {start} hingga {end}, {len(html)} bait -> {out_path}")

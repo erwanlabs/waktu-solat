@@ -10,11 +10,11 @@
 <style>
 /* Ditulis untuk Safari iOS 9: tiada CSS variables, tiada grid.
    Animasi hanya guna transform & opacity supaya ringan untuk cip A5. */
-@font-face { font-family: "Poppins"; font-weight: 200; src: url(fonts/poppins-latin-200-normal.woff2) format("woff2"), url(fonts/poppins-latin-200-normal.woff) format("woff"); }
-@font-face { font-family: "Poppins"; font-weight: 300; src: url(fonts/poppins-latin-300-normal.woff2) format("woff2"), url(fonts/poppins-latin-300-normal.woff) format("woff"); }
-@font-face { font-family: "Poppins"; font-weight: 400; src: url(fonts/poppins-latin-400-normal.woff2) format("woff2"), url(fonts/poppins-latin-400-normal.woff) format("woff"); }
-@font-face { font-family: "Poppins"; font-weight: 500; src: url(fonts/poppins-latin-500-normal.woff2) format("woff2"), url(fonts/poppins-latin-500-normal.woff) format("woff"); }
-@font-face { font-family: "Poppins"; font-weight: 600; src: url(fonts/poppins-latin-600-normal.woff2) format("woff2"), url(fonts/poppins-latin-600-normal.woff) format("woff"); }
+@font-face { font-family: "Poppins"; font-weight: 200; src: url(/*__FONT_200__*/) format("woff"); }
+@font-face { font-family: "Poppins"; font-weight: 300; src: url(/*__FONT_300__*/) format("woff"); }
+@font-face { font-family: "Poppins"; font-weight: 400; src: url(/*__FONT_400__*/) format("woff"); }
+@font-face { font-family: "Poppins"; font-weight: 500; src: url(/*__FONT_500__*/) format("woff"); }
+@font-face { font-family: "Poppins"; font-weight: 600; src: url(/*__FONT_600__*/) format("woff"); }
 
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-box-sizing: border-box; }
 html, body { height: 100%; background: #060807; color: #f2efe6; overflow: hidden; }
@@ -48,6 +48,23 @@ body {
 @keyframes hanyut1 { from { transform: translate3d(0,0,0); } to { transform: translate3d(22vw,14vw,0); } }
 @keyframes hanyut2 { from { transform: translate3d(0,0,0); } to { transform: translate3d(-20vw,-12vw,0); } }
 body.tenang .cahaya { animation: none; }
+
+/* ---------- Mod ringan: iPad lama (cip lemah, skrin bukan Retina) ----------
+   Semua animasi berterusan dimatikan, latar jadi rata, dan font lebih tebal
+   supaya tak pecah di skrin resolusi rendah. */
+body.ringan *, body.ringan *:before, body.ringan *:after { animation: none !important; transition: none !important; }
+body.ringan #latar { display: none; }
+body.ringan #lapisCorak { display: none; }
+body.ringan .kotak.next:before { opacity: 1; }
+body.ringan .kotak.kini { transform: none; }
+body.ringan #kilau { display: none; }
+body.ringan #jam, body.ringan #lapisKira { font-weight: 300; }
+body.ringan #jamS, body.ringan .kotak .t, body.ringan #zon, body.ringan #seterusnya,
+body.ringan #lapisKecil, body.ringan #bawah { font-weight: 400; }
+body.ringan .kotak .n { font-weight: 600; }
+body.ringan .kotak { background: #131310; border-color: #2e2a20; }
+body.ringan .kotak.kini { background: #d8b45a; border-color: #e7c977; }
+body.ringan .kotak.next { border-color: #a8873f; }
 
 /* ---------- Susun atur ---------- */
 #app {
@@ -312,6 +329,9 @@ var IQAMAH_MINIT = [5, 0, 5, 5, 5, 5];
 var SOLAT_MINIT = 15;    // tempoh skrin "matikan telefon" selepas iqamah
 var JUMAAT_MINIT = 45;   // tempoh skrin khutbah & solat Jumaat dari masuk waktu
 var ANIMASI_LATAR = true; // false = matikan cahaya bergerak di latar (kurang beban GPU)
+// "auto" = mod ringan untuk iPhone/iPad iOS 12 ke bawah, penuh untuk lain-lain.
+// Boleh dipaksa melalui link: ?mod=ringan atau ?mod=penuh
+var MOD = "auto";
 
 // ===== DATA JAKIM (zon NGS03) =====
 // Setiap baris: hijri|imsak|subuh|syuruk|zohor|asar|maghrib|isyak, bermula /*__START_LABEL__*/
@@ -480,7 +500,7 @@ function kemasJam(now, animasi) {
 function tick() {
   var now = new Date();
   var hari = dataHari(now);
-  var animasi = mulaJalan;  // jangan animasi digit pada saat pertama page dibuka
+  var animasi = mulaJalan && !RINGAN;  // tiada animasi digit pada saat pertama & dalam mod ringan
 
   if (!hari) {
     $("tamat").style.display = "block";
@@ -546,6 +566,15 @@ function tick() {
   setTimeout(tick, 1000 - new Date().getMilliseconds() + 20);
 }
 
+function pilihRingan() {
+  var q = location.search.match(/mod=(ringan|penuh)/);
+  var mod = q ? q[1] : MOD;
+  if (mod !== "auto") return mod === "ringan";
+  var ios = navigator.userAgent.match(/OS (\d+)_\d+(_\d+)? like Mac OS X/);
+  return !!(ios && parseInt(ios[1], 10) < 13);
+}
+var RINGAN = pilihRingan();
+
 function mula() {
   for (var i = 0; i < 6; i++) {
     var el = $("k" + i);
@@ -556,7 +585,8 @@ function mula() {
   binaDigit($("jamS"), "00");
   binaDigit($("kira"), "00:00:00");
   binaDigit($("lapisKira"), "00:00");
-  if (!ANIMASI_LATAR) document.body.className = "tenang";
+  if (!ANIMASI_LATAR) document.body.classList.add("tenang");
+  if (RINGAN) document.body.classList.add("ringan");
   $("nama").innerHTML = NAMA;
   $("julat").innerHTML = "Data sah hingga /*__END_LABEL__*/";
   tick();
